@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    
+  </head>
+
+  <!-- bg-dark text-white-->
+  <body class="container">
+    <h2>Introduction to JavaScript Regular Expression</h2>
+    <h5 class="text-secondary">String Methods</h5>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button onclick="pattern_represenation()" class="btn btn-outline-secondary">Pattern representation</button>
+        <button onclick="string_search()" class="btn btn-outline-secondary">String search</button>
+        <button onclick="literal_string_pattern()" class="btn btn-outline-secondary">Literal string pattern</button>
+        <button onclick="string_match()" class="btn btn-outline-secondary">String match</button>
+        <button onclick="string_match_all()" class="btn btn-outline-secondary">String matchAll</button>    
+    </div>
+    <hr>
+    <h5 class="text-secondary">Test Pattern</h5>
+    <div class="btn-group" role="group" aria-label="Basic example">    
+        <button onclick="integer_check()" class="btn btn-outline-secondary">Integer check</button>
+        <button onclick="test_is_integer()" class="btn btn-outline-secondary">Unit Test - Integer</button>
+    </div>
+
+    <hr>
+    <h5 class="text-secondary">Groups</h5>
+    <div class="btn-group" role="group" aria-label="Basic example"> 
+        <button onclick="groups_indexed()" class="btn btn-outline-secondary">Groups - Indexed</button>
+        <button onclick="groups_named()" class="btn btn-outline-secondary">Groups - Named</button>
+    </div>
+    <hr>
+    <h5 class="text-secondary">Find & Replace, Split</h5>
+    <div class="btn-group" role="group" aria-label="Basic example">         
+        <button onclick="find_replace()" class="btn btn-outline-secondary">Find and Replace</button>
+        <button onclick="find_replace_custom()" class="btn btn-outline-secondary">Find and Replace - Custom Function</button>    
+        <button onclick="split()" class="btn btn-outline-secondary">Split</button>
+    </div>
+
+    <hr>
+    <h5 class="text-secondary">RegExp Methods</h5>
+    <div class="btn-group" role="group" aria-label="Basic example">    
+        <button onclick="integer_check_using_test()" class="btn btn-outline-secondary">Test</button>
+        <button onclick="re_exec()" class="btn btn-outline-secondary">Exec</button>
+    </div>
+
+    <hr>
+    <h5 class="text-secondary">Output</h5>
+    <pre style="font-size:large;">
+        <p id="output"></p>
+    </pre>    
+
+    <script>  
+        "use strict";    
+        function pattern_represenation()
+        {
+            /* string type - embedded special characters are interpreted
+               need to escape using "\"
+               regxp - are wrapped in /.../. No need to escape backslash. however, you need
+               to escape forward slash when used in the pattern
+            */
+            let pattern_string = "a\\tb"; 
+            let pattern_object = /a\tb/; // literal - taken as-is
+
+            console.log("string", pattern_string);
+            console.log("regexp", pattern_object.source);
+            
+            document.getElementById("output").innerHTML = 
+                "Pattern as string:\t"  + pattern_string + "<br>"
+              + "Pattern as regexp:\t" + pattern_object.source + "<br>";
+        }
+
+        function string_search()
+        {
+            // string.search returns index location of the FIRST match
+            // does not provide the "substring" that matched the pattern or the length of the match
+
+            let re = /\d+/; // \d = digit. + = one or more.  This pattern matches one or more digits
+            let text = "my lucky numbers are 42 and 24";
+            let outputText = "";
+            
+            console.log("Pattern", re.source);
+            console.log("Text", text);
+
+            let idx = text.search(re);
+
+            if (idx >= 0)
+            {
+                outputText = "\tFound a match at index:" + idx + " character is:" + text[idx];
+            }
+            else
+            {
+                outputText = "\tNo match";
+            }
+
+            console.log(outputText);   
+            
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source  + "<br>"
+                + "Text: " + text + "<br>"
+                + "Match : " + "<br>" + outputText;         
+        }
+
+        function literal_string_pattern()
+        {
+            // string.search returns index location of the FIRST match
+            // does not provide the "substring" that matched the pattern or the length of the match
+
+            // Literal string - \ is escape character - it is no longer a regex patern
+            // \d+ simply matches one or more d's.
+            // use double-slash \\d+ matches one or more digits
+
+            let pattern = "\\d+"; // \d = digit. + = one or more.  This pattern matches one or more digits
+            let text = "my lucky numbers are 42 and 24";
+
+            console.log("Pattern", pattern);
+            console.log("Text", text);
+
+            let idx = text.search(pattern);
+            console.log("Index Match:", idx);   
+
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + pattern  + "<br>"
+                + "Text: " + text + "<br>"
+                + "Index: " + idx + "<br>"
+                + ((idx >=0) ? "Character: " + text[idx] + "<br>": "No match");         
+        }
+
+        function string_match()
+        {
+            // string.match returns the matching text
+            //   default - returns the first match
+            //   /g - with global flag - returns all matches
+            // But, does not give you information about location of match
+
+            let re = /\d+/g; // \d = digit. + = one or more.  This pattern matches one or more digits
+            let text = "NY Postal Codes are 10001, 10002, 10003, 10004";
+
+            let outputText = "";
+
+            console.log("Pattern", re.source);
+            console.log("Text", text);
+
+            let matches = text.match(re);
+            
+            // match method returns a null when there is no-match
+            if (matches)
+            {
+                outputText = "\tFound match [" + matches + "]";
+            }
+            else
+            {
+                outputText = "\tNo match";
+            }
+
+            console.log(outputText);    
+
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source + "<br>"
+                + "Text: " + text + "<br>" 
+                + "Matches: " + "<br>" + outputText;         
+        }
+
+        function string_match_all()
+        {
+            // string.matchall returns an iterator and you have control to ask for more matches
+            //   requires global flag 
+            //      /g - returns all matches
+
+            let re = /\d+/g; // \d = digit. + = one or more.  This pattern matches one or more digits                        
+            let text = "NY Postal Codes are 10001, 10002, 10003, 10004";
+
+            console.log("Pattern", re.source);
+            console.log("Text", text);
+
+            let matches = text.matchAll(re);
+            
+            let outputText = "";
+
+            let i = 0;
+
+            for (let match of matches)
+            {                
+                outputText += ("\tFound a match:" + match[0] + " at index:" + match.index + "<br>");
+                i += 1;
+
+                if (i > 2)
+                {
+                    break;
+                }
+            }        
+            
+            if (outputText.length == 0)
+            {
+                outputText = "\tNo match";
+            }
+
+            console.log(outputText);
+
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source + "<br>"
+                + "Text: " + text + "<br>" 
+                + "Matches: " + "<br>" + outputText;         
+        }
+
+
+        function is_integer(text)
+        {
+            // check if a given text is integer
+            // string.search returns index location of the FIRST match
+            // does not provide the "substring" that matched the pattern or the length of the match
+
+            let re = /^\d+$/; // \d = digit. + = one or more.  This pattern matches one or more digits
+
+            console.log("Pattern", re);
+            console.log("Text", text);
+
+            let idx = text.search(re);
+
+            if (idx >= 0)
+            {
+                console.log('Integer: True');
+                return true;
+            }
+
+            console.log('Integer: False');
+            return false;
+        }
+
+        function integer_check()
+        {
+            let text = 'abcd';
+            let check = is_integer(text);
+
+
+            document.getElementById("output").innerHTML = 
+                "Text: " + text + "<br>"
+                + "Is Integer? " + check +  "<br>";        
+        }
+
+        function test_is_integer()
+        {
+            let pass_list = ["123","456","900","0991"];
+            let fail_list = ["a123","124a","1 2 3","1\t2"," 12","45 "];
+            
+            let false_negative = [];
+            let false_positive = [];
+
+            for (let text of pass_list)
+            {
+                if (!is_integer_regexp_test(text))
+                {
+                    false_negative.push(text); 
+                }
+            }
+
+            for (let text of fail_list)
+            {
+                if (is_integer_regexp_test(text))
+                {
+                    false_positive.push(text); 
+                }
+            }
+
+            console.log('False Negative: ', false_negative);
+            console.log('False Positive: ', false_positive);
+
+            document.getElementById("output").innerHTML = 
+                "False Negative: " + (false_negative.length ? false_negative: "None") + "<br>"
+              + "False Positive: " + (false_positive.length ? false_positive: "None") +  "<br>";
+        }
+
+        function groups_indexed()
+        {
+            let re = /(\d{4})(\d{2})(\d{2})/g; // \d = digit. + = one or more.  This pattern matches one or more digits
+            let text = "Start Date: 20200920";
+
+            console.log("Pattern", re.source);
+            console.log("Text", text);
+
+            let matches = text.matchAll(re);
+            
+            let outputText = "";
+
+            for (let match of matches)
+            {                
+                outputText += ("Text: " + match[0] + " index: " + match.index + "<br>");
+                outputText += ("--Groups [1]: " + match[1] + "<br>");
+                outputText += ("--Groups [2]: " + match[2] + "<br>");
+                outputText += ("--Groups [3]: " + match[3] + "<br>");
+
+                console.log(match);
+            }        
+            
+            console.log(outputText);
+
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source + "<br>"
+                + "Text: " + text + "<br>" 
+                + "Matches: " + "<br>" + outputText;         
+        }
+
+        function groups_named()
+        {
+            let re = /(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})/g; 
+            let text = "Start Date: 20200920";            
+
+            console.log("Pattern", re.source);
+            console.log("Text", text);
+
+            let matches = text.matchAll(re);
+            
+            let outputText = "";
+
+            for (let match of matches)
+            {                
+                outputText += ("Text: " + match[0] + " index: " + match.index + "<br>");
+
+                // Access Group by index match[1]                
+                for (let i = 1; i < match.length; i++)
+                {
+                    outputText += ("--Group [" + i + "] : " + match[i] + "<br>");    
+                }
+
+                outputText += ("--Access By Name--" + "<br>");
+
+                // Access Group by name match.groups["year"]
+                for (let p in match.groups )
+                {
+                    outputText += ("--Groups " + p + ": " + match.groups[p] + "<br>");
+                }
+            }        
+            
+            console.log(outputText);
+
+            // escape < with &lt; as named group was not rendered in html page
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source.replace(/</g,'&lt;') + "<br>"
+                + "Text: " + text + "<br>" 
+                + "Matches: " + "<br>" + outputText;         
+        }
+
+        function find_replace()
+        {
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+            let re = /(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})/g; 
+            let text = "Start Date: 20200920, End Date: 20210920";            
+            let replacement_pattern = "$<month>-$<day>-$<year>";
+
+            console.log('original text:', text);
+            
+            let new_text = text.replace(re,replacement_pattern);
+
+            console.log('new text:', new_text);
+
+            document.getElementById("output").innerHTML =
+                "Original Text: " + text + "<br>" +
+                "New Text:      " + new_text + "<br>";
+        }
+
+        function format_date(match, year, month, day, offset, string, groups)
+        {
+            let new_date = new Date(year,month,day);
+
+            console.log(match, groups);
+            return new_date.toDateString();
+        }
+
+        function find_replace_custom()
+        {
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+            let re = /(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})/g; 
+            let text = "Start Date: 20200920, End Date: 20210920";
+            
+            console.log('original text:', text);
+            
+            let new_text = text.replace(re, format_date);
+
+            console.log('new text:', new_text);
+
+            document.getElementById("output").innerHTML =
+                "Original Text: " + text + "<br>" +
+                "New Text:      " + new_text + "<br>";
+        }
+
+        function split()
+        {
+            let re = /;/g; 
+            let text = "a-c;x;y;1";                        
+
+            console.log('original text:', text);
+            
+            let new_text = text.split(re);
+
+            console.log('new text:', new_text);
+
+            document.getElementById("output").innerHTML =
+                "Original Text: " + text + "<br>" +
+                "New Text:      [" + new_text + "]<br>";
+        }
+
+
+        function is_integer_regexp_test(text)
+        {
+            // check if a given text is integer
+            // start of string or line. followed by one or more digits. followed by end of string or line
+            //      ^ = start of string or line.
+            //      $ = end of string or line
+            let re = /^\d+$/;
+
+            console.log("Pattern", re);
+            console.log("Text", text);
+
+            let result = re.test(text);
+
+            console.log('Is Integer? ', result);
+
+            return result;
+        }
+
+        function integer_check_using_test()
+        {
+            let text = 'abcd24';
+            let check = is_integer_regexp_test(text);
+
+
+            document.getElementById("output").innerHTML = 
+                "Text: " + text + "<br>"
+                + "Is Integer? " + check +  "<br>";        
+        }
+
+        function re_exec()
+        {
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
+            //   requires global flag 
+            //      /g - returns all matches
+
+            // WARNING - use the /g flag otherwise, it will go into infinite loop
+            let re = /(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})/g;
+            let text = "Start Date: 20200920, End Date: 20210920";
+
+            console.log("Pattern", re.source);
+            console.log("Text", text);
+            
+            let match;                
+            let outputText = "";
+
+            while ((match = re.exec(text)) != null)
+            {
+                outputText += ("Text: " + match[0] 
+                                + " index: " + match.index 
+                                +  " last index:" + re.lastIndex  + "<br>");
+                
+                outputText += ("--Access By Number--" + "<br>");
+
+                // Access Group by index match[1]                
+                for (let i = 1; i < match.length; i++)
+                {
+                    outputText += ("--Group [" + i + "] : " + match[i] + "<br>");    
+                }
+
+                outputText += ("--Access By Name--" + "<br>");
+
+                // Access Group by name match.groups["year"]
+                for (let p in match.groups )
+                {
+                    outputText += ("--Group " + p + ": " + match.groups[p] + "<br>");
+                }
+            }
+
+            console.log(outputText);                       
+
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source + "<br>"
+                + "Text: " + text + "<br>" 
+                + "Matches: " + "<br>" + outputText;         
+        }
+
+        function string_performance_search()
+        {
+            // string.search returns index location of the FIRST match
+            // does not provide the "substring" that matched the pattern or the length of the match
+            let startTime = Date.now();
+            let endTime = Date.now();
+
+            let re = /^(\w*)*$/; // \d = digit. + = one or more.  This pattern matches one or more digits
+            let text = "123456789012345!";
+
+            console.log("Pattern", re);
+            console.log("Text", text);
+
+            let idx = text.search(re);
+            console.log("Index Match:", idx);   
+
+            endTime = Date.now();
+
+            let elapsedTime = (endTime - startTime)/1000;
+            
+            console.log('Elapsed Time', elapsedTime);
+
+            document.getElementById("output").innerHTML = 
+                "Pattern: " + re.source  + "<br>"
+                + "Text: " + text + "<br>"
+                + "Index: " + idx + "<br>"
+                + "Character: " + text[idx] + "<br>" 
+                + "Elapsed Time(s): " + elapsedTime;         
+
+        }
+
+    </script>
+  </body>
+</html>
