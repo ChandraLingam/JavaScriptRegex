@@ -130,78 +130,9 @@
 
         function process_robocopy_log()
         {
-            outputTextArea.value = "";
-            
-            let outputStructure = {
-                directory:{Source:'', Dest:''},
-                metrics: [],
-                error: false,
-                errorMessage: ''
-            };
+            // TODO: Parsing code for robocopy log
 
-            // Extract source and destination directory
-            // no global set here
-            let PATTERN_DIRECTORY_NAME = /^\s+(?<type>source|dest)\s+:\s+(?<dir>.+)/i;
-        
-            // Locate Errors - escape / in date
-            let PATTERN_ERROR = /^(?<ts>\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2}:\d{2})\s+error(?<error>.+)/i;
-        
-            // Extract Metrics columns
-            let PATTERN_METRICS = /^\s+(?<type>dirs|files|bytes)\s+:\s+(?<total>\d+)\s+(?<copied>\d+)\s+(?<skipped>\d+)\s+(?<mismatch>\d+)\s+(?<failed>\d+)\s+(?<extras>\d+)/i;
-
-            try
-            {
-                input_check();
-                // split on new line
-                let inputLines = inputText.split(/\n/g);    
-                let line = '';
-
-                for (line of inputLines)
-                {
-                    let match = PATTERN_ERROR.exec(line);
-                    if (match != null)
-                    {
-                        outputStructure.error = true;
-                        outputStructure.errorMessage = line;                        
-                    } 
-                    
-                    match = PATTERN_DIRECTORY_NAME.exec(line);
-                    if (match != null)
-                    {
-                        outputStructure.directory[match.groups['type']] = match.groups['dir'];
-                    }
-
-                    match = PATTERN_METRICS.exec(line);
-                    if (match != null)
-                    {
-                        let metricsRow = [];
-                        let metricsHeader = [];
-                        // add column header
-                        let captureHeader =  outputStructure.metrics.length == 0?true:false;
-
-                        for (let p in match.groups)
-                        {
-                            if (captureHeader)
-                                metricsHeader.push(p);
-
-                            metricsRow.push(match.groups[p]);
-                        }
-
-                        if (captureHeader)
-                            outputStructure.metrics.push(metricsHeader);
-
-                        outputStructure.metrics.push(metricsRow);                        
-                    }
-                }
-
-                outputTextArea.value = JSON.stringify(outputStructure,undefined,2);
-            }
-            catch (err)
-            {
-                console.log("Error: ", err.name, err.message);
-                outputText.value += ("Error: " + err.name + " " + err.message);
-                return;
-            }
+            return;
         }
 
         function new_search()
