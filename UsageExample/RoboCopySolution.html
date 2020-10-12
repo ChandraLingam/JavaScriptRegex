@@ -134,11 +134,7 @@
             
             let outputStructure = {
                 directory:{Source:'', Dest:''},
-                metricType: [],
-                metricTotal: [],
-                metricCopied:[],
-                metricSkipped:[],
-                metricFailed:[],
+                metrics: [],
                 error: false,
                 errorMessage: ''
             };
@@ -179,11 +175,23 @@
                     match = PATTERN_METRICS.exec(line);
                     if (match != null)
                     {
-                        outputStructure.metricType.push(match.groups['type']);
-                        outputStructure.metricTotal.push(match.groups['total']);
-                        outputStructure.metricCopied.push(match.groups['copied']);
-                        outputStructure.metricFailed.push(match.groups['failed']);
-                        outputStructure.metricSkipped.push(match.groups['skipped']);
+                        let metricsRow = [];
+                        let metricsHeader = [];
+                        // add column header
+                        let captureHeader =  outputStructure.metrics.length == 0?true:false;
+
+                        for (let p in match.groups)
+                        {
+                            if (captureHeader)
+                                metricsHeader.push(p);
+
+                            metricsRow.push(match.groups[p]);
+                        }
+
+                        if (captureHeader)
+                            outputStructure.metrics.push(metricsHeader);
+
+                        outputStructure.metrics.push(metricsRow);                        
                     }
                 }
 
