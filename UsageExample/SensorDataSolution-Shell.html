@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    
+  </head>
+
+  <!-- bg-dark text-white-->
+  <body class="container">
+    <h2>Learn Regex with JavaScript</h2>    
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Pattern</span>
+        </div>
+        <input type="text" class="form-control" 
+            placeholder="Search Pattern" aria-label="Search Pattern" 
+            aria-describedby="basic-addon1" id="searchPattern">
+    </div>
+
+    <div class="form-check-inline">        
+        <input type="checkbox" class="form-check-input" id="globalCheck">
+        <label class="form-check-label text-secondary" for="globalCheck">Global (g)</label>
+    </div>
+    <div class="form-check-inline">        
+        <input type="checkbox" class="form-check-input" id="caseInsensitiveCheck">
+        <label class="form-check-label text-secondary" for="caseInsensitiveCheck">Case insensitive (i)</label>
+    </div>
+    <div class="form-check-inline">        
+        <input type="checkbox" class="form-check-input" id="multilineCheck">
+        <label class="form-check-label text-secondary" for="multilineCheck">Multiline (m)</label>
+    </div>
+    <div class="form-check-inline">        
+        <input type="checkbox" class="form-check-input" id="newLineCheck">
+        <label class="form-check-label text-secondary" for="newLineCheck">Wildcard '.' Match New line (s)</label>
+    </div>
+    <div class="form-check-inline">        
+        <input type="checkbox" class="form-check-input" id="unicodeCheck">
+        <label class="form-check-label text-secondary" for="unicodeCheck">Unicode (u)</label>
+    </div>
+
+    <hr>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Replacement Pattern</span>
+        </div>
+        <input type="text" class="form-control" 
+            placeholder="Replacement Pattern" aria-label="Replacement Pattern" 
+            aria-describedby="basic-addon1" id="replacementPattern">
+    </div>
+    <hr>
+    <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Text</span>
+        </div>
+        <textarea class="form-control" aria-label="input text" 
+            placeholder="Input Text" id="inputText"></textarea>
+    </div>
+    <br>
+
+    <button type="button" class="btn btn-outline-secondary" onclick="new_search()">Match</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="next_match()">Next Match</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="find_replace()">Replace</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="split()">Split</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="process_sensor_data()">Sensor Data</button>
+
+    <hr>
+    <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Result</span>
+        </div>
+        <textarea class="form-control" aria-label="output text" 
+            placeholder="Output" id="outputText"></textarea>
+    </div>
+
+    <pre style="font-size:medium">
+        <p id="outputtest" class="text-danger"></p>
+    </pre>
+
+    <script>  
+        "use strict";
+        let searchPattern = "", replacementPattern = "";
+        let inputText = "";
+        let globalCheck = "", caseInsensitiveCheck = "";
+        let multilineCheck = "", newLineCheck = "", unicodeCheck = ""; 
+        
+        let re = new RegExp();
+        let outputTextArea = document.getElementById("outputText");
+
+        function flags()
+        {
+            return globalCheck + caseInsensitiveCheck + multilineCheck + newLineCheck + unicodeCheck;                
+        }
+
+        function input_check()
+        {
+            searchPattern = document.getElementById("searchPattern").value;
+            console.log(searchPattern);
+            
+            replacementPattern = document.getElementById("replacementPattern").value;
+            console.log(replacementPattern);
+
+            inputText = document.getElementById("inputText").value;
+            console.log(inputText);
+
+            // output text is generated
+            console.log(document.getElementById("outputText").value);
+
+            globalCheck = (document.getElementById("globalCheck").checked ? 'g' : '');            
+            console.log(globalCheck);
+
+            caseInsensitiveCheck = (document.getElementById("caseInsensitiveCheck").checked ? 'i' : '');
+            console.log(caseInsensitiveCheck);
+
+            multilineCheck = (document.getElementById("multilineCheck").checked ? 'm' : '');
+            console.log(multilineCheck);
+
+            newLineCheck = (document.getElementById("newLineCheck").checked ? 's' : '');
+            console.log(newLineCheck);
+
+            unicodeCheck = (document.getElementById("unicodeCheck").checked ? 'u' : '');
+            console.log(unicodeCheck);       
+
+            console.log("Flags: ", flags()); 
+        }
+
+        function process_sensor_data()
+        {
+            // TODO: Code to process sensor data
+        }
+
+        function new_search()
+        {
+            outputTextArea.value = "Value,Index,Length,ElapsedTime(s)" + "\n";
+
+            try
+            {
+                input_check();
+                re = new RegExp(searchPattern, flags());
+                highlight_match();
+            }
+            catch (err)
+            {
+                console.log("Error: ", err.name, err.message);
+                outputText.value += ("Error: " + err.name + " " + err.message);
+                return;
+            }
+        }
+
+        function next_match()
+        {
+            // Next match valid only if global flag is set
+            if (re.global)
+            {
+                highlight_match();
+            }
+            else
+            {
+                outputTextArea.value += "End\n" ;
+            }            
+        }
+
+        function highlight_match()
+        {
+            let outputText = "";
+            try
+            {
+                let startTime = Date.now();
+                
+                // find next match
+                let match = re.exec(inputText);                
+
+                let elapsedTime = (Date.now() - startTime)/1000;
+
+                if (match != null)
+                {
+                    outputText += (match[0] + "," 
+                                + match.index + "," 
+                                + match[0].length + ","
+                                + elapsedTime + "\n");
+
+                    document.getElementById("inputText").focus();
+                    document.getElementById("inputText").setSelectionRange(match.index, match.index + match[0].length);
+
+                    // Access Group by index match[1]                
+                    for (let i = 1; i < match.length; i++)
+                    {
+                        outputText += ("  Group [" + i + "] : " + match[i]);    
+                    }
+
+                    // if there are more groups group(0) 
+                    if (match.length > 1)
+                        outputText += '\n';
+
+                    // Access Group by name match.groups["year"]
+                    let namedGroup = false;                    
+                    for (let p in match.groups )
+                    {
+                        namedGroup = true;
+                        outputText += ("  Group [" + p + "]: " + match.groups[p]);
+                    }
+
+                    if (namedGroup)
+                        outputText += '\n';
+                }
+                else
+                {
+                    outputText += ("End. Elapsed Time (s): " + elapsedTime + "\n");
+                }
+            }
+            catch (err)
+            {
+                console.log("Error: ", err.name, err.message);
+                outputText = ("Error: " + err.name + " " + err.message);
+                return;
+            }
+            finally
+            {
+                outputTextArea.value += outputText;
+            }
+        }        
+
+        function find_replace()
+        {
+            try
+            {
+                input_check();
+                re = new RegExp(searchPattern, flags());
+
+                console.log('original text:', inputText);                
+                
+                let newText = inputText.replace(re, replacementPattern);
+                
+                console.log('new text:', newText);
+
+                outputTextArea.value = newText + "\n";
+            }
+            catch (err)
+            {
+                console.log("Error: ", err.name, err.message);
+                outputText.value += ("Error: " + err.name + " " + err.message);
+                return;
+            }
+        }
+
+        function split()
+        {
+            try
+            {
+                input_check();
+                re = new RegExp(searchPattern, flags());
+
+                console.log('original text:', inputText);                
+                
+                let newText = inputText.split(re);
+                
+                console.log('new text:', newText);
+
+                outputTextArea.value = "[" + newText + "]\n";
+            }
+            catch (err)
+            {
+                console.log("Error: ", err.name, err.message);
+                outputText.value += ("Error: " + err.name + " " + err.message);
+                return;
+            }
+        }        
+    </script>
+  </body>
+</html>
