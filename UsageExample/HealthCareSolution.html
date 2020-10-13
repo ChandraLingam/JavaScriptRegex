@@ -137,7 +137,7 @@
             
             // need to escape </> forward slash with a backslash
             let PATTERN_ROW = /(?:<tr\s*\/>)|(?:<tr\b[^>]*>(?<arow>.+?)<\/tr>)/gi;
-            let PATTERN_CELL = /(?:<(?:th|td)\s*\/>)|(?:<(?<element>th|td)\b[^>]*>(?<col>.*?)<\/?\k<element>>)/gi;
+            let PATTERN_CELL = /(?:<(?:th|td)\s*\/>)|(?:<(?<element>th|td)\b[^>]*>(?<col>.*?)<\/\k<element>>)/gi;
             let PATTERN_CLEANUP = /\s+|&#160;/g;
         
             try
@@ -177,7 +177,7 @@
             catch (err)
             {
                 console.log("Error: ", err.name, err.message);
-                outputText.value += ("Error: " + err.name + " " + err.message);
+                outputTextArea.value += ("Error: " + err.name + " " + err.message);
                 return;
             }
         }
