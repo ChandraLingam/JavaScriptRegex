@@ -25,8 +25,7 @@ Here are some typical uses of regular expression
 * Regex engine puts the onus on the developers, that is us, to write efficient patterns - you will gain knowledge of regular expression engine that will help you write optimal patterns  
 * There are several exercises for you to apply your new skills  
 * We then look at performance and how poorly written patterns can degrade exponentially - You will learn how to optimize the patterns and address performance issues  
-* There are three hands-on projects in this course  
-* You will learn how to apply the regex for three distinctly different data sets – unstructured log data, IoT sensor data, and parsing medical test data in HTML format  
+* There are three hands-on projects in this course - You will learn how to apply the regex for three distinctly different data sets – unstructured log data, IoT sensor data, and parsing medical test data in HTML format  
 
 ### Source Code
 The source code for this course is distributed using Github – so, you always have access to up-to-date code  
